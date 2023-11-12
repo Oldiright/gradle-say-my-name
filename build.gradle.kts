@@ -1,5 +1,6 @@
 plugins {
     id("java")
+
 }
 
 group = "org.example"
@@ -15,6 +16,17 @@ dependencies {
     implementation("com.google.code.gson:gson:2.9.1")
 }
 
+tasks.jar {
+    archiveFileName.set("myname.jar")
+    manifest.attributes["Main-Class"] = "org.example.Main"
+    val dependencies = configurations
+            .runtimeClasspath
+            .get()
+            .map(::zipTree) // OR .map { zipTree(it) }
+    from(dependencies)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 tasks.test {
     useJUnitPlatform()
 }
+
